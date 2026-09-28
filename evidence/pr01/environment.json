@@ -1,0 +1,12 @@
+{
+  "launch_method": "docker",
+  "os_version": "Ubuntu 24.04.4 LTS",
+  "ros_distribution": "jazzy",
+  "gazebo_version": "8.11.0",
+  "rmw_implementation": "rmw_fastrtps_cpp",
+  "ros_domain_id": [
+    16,
+    17
+  ],
+  "docker_image_digest": "sha256:d16957210572c5f919f3f9bd2fb0cc24a82542647489d8b8eda7c3beda31305f"
+}

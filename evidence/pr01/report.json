@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "practice_id": "PR01",
+  "commit": "dd428d2a82e51cf83d3ae27db8f3573ec0064412",
+  "cource_kit": {
+    "version": "v1-w03-7fbfd3e8161a",
+    "archive_sha256": "7fbfd3e8161ab6c6ebefc7663efdaf77d9a7d490399743507f33dcefbd5ac522"
+  },
+  "commads": [
+    "ros2 doctor --report",
+    "ros2 run turtlesim turtlesim_node",
+    "ros2 run turtlesim turtle_teleop_key",
+    "ros2 node list --no-daemon --spin-time 2",
+    "ros2 topic list -t",
+    "ros2 node info /turtlesim",
+    "ros2 topic type /turtle/pose",
+    "POSE_TYPE=$(ros2 topic type /turtle1/pose)",
+    "ros2 topic echo /turtle1/pose --once",
+    "ros2 topic hz /turtle1/pose",
+    "export ROS_DOMAIN_ID=17; ros2 run turtlesim turtle_teleop_key",
+    "ros2 node list --no-daemon --spin-time 2",
+    "timeout 5s ros2 topic echo /turtle1/pose \"$POSE_TYPE\" --once > temp_rep_file",
+    "export ROS_DOMAIN_ID=16; ros2 run turtlesim turtle_teleop_key",
+    "ros2 node list --no-daemon --spin-time 2",
+    "timeout 5s ros2 topic echo /turtle1/pose \"$POSE_TYPE\" --once > temp_rep_file"
+  ],
+  "tests": [
+    {
+      "name": "ros2_graph_topology",
+      "status": "passed"
+    },
+    {
+      "name": "turtlesim_pose_frequency_measurment",
+      "status": "passed"
+    },
+    {
+      "name": "ros_domain_isolation_test",
+      "status": "passed"
+    },
+    {
+      "name": "ros_domain_reconnection_test",
+      "status": "passed"
+    }
+  ],
+  "defect": {
+    "reproducer": "ROS_DOMAIN_ID=17 (turtlesim on 16 DOMAIN_ID) -> none data for turtlenode; 124 in 'timeout check' as expected.",
+    "root_cause": "ROS 2 isolation because of the Domain Mismatch on DDS Discovery level; Nodes ('teleop' and 'sim'); listen different ports.",
+    "proof_after": "In the same DOMAIN_ID's 'timeout check' command runs correctly (0 exit code); Nodes may access data, 'sim' access pose data."
+  },
+  "claims": {
+    "public_tests_passed": true,
+    "defect_reproduced": true,
+    "defect_fixed": true
+  }
+}
