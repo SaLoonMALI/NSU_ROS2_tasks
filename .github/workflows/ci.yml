@@ -1,0 +1,22 @@
+name: NSU_ROBO_ros2_pr1_checks
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-slim
+    container:
+      image: osrf/ros:jazzy-desktop-full@sha256:d16957210572c5f919f3f9bd2fb0cc24a82542647489d8b8eda7c3beda31305f
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: val_env_json
+        shell: sh
+        run: python3 -m json.tool evidence/pr01/environment.json > /dev/null
+      - name: dload__course-kit
+        shell: sh
+        run: |
+          curl -fsSLo course-kit.tar.gz "https://ros.lms.ci.nsu.ru/downloads/robotics-course-kit-v1-w03-7fbfd3e8161a.tar.gz"
+          mkdir -p .course-kit
+          tar -xzf course-kit.tar.gz -C .course-kit        
