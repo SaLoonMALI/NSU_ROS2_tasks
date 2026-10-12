@@ -19,4 +19,5 @@ jobs:
           mkdir -p course-kit/
           tar -xzf course-kit.tar.gz -C course-kit/
           ls -a
+          ls -a course_kit/
           python3 course_kit/v1/tools/check_practice.py PR02 --submission -
