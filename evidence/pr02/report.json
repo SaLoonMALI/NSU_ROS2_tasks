@@ -2,11 +2,11 @@
   "schema_version": 1,
   "practice_id": "PR02",
   "commit": "ab58937f8da8be85c47a187f7d233f80b2024fee",
-  "cource_kit": {
+  "course_kit": {
     "version": "v1-w05-bca214e3de6f.tar.gz",
     "archive_sha256": "bca214e3de6f90f9513049dfa0f36fee65ad834da502dc3f3f8fb443517b5197"
   },
-  "commads": [
+  "commands": [
     "printenv ROS_DISTRO ROS_DOMAIN_ID",
     "ros2 pkg prefix turtlesim",
     "ros2 pkg create --build-type ament_python --license MIT turtle_bringup --dependencies launch launch_ros turtlesim",
@@ -49,6 +49,10 @@
     "public_tests_passed": true,
     "defect_reproduced": true,
     "defect_fixed": true
+  },
+  "time": {
+    "contact_academic_hours": 2,
+    "self_study_hours": 2
   },
   "ai_used": false
 }
