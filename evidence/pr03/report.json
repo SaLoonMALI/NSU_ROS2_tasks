@@ -2,11 +2,11 @@
   "schema_version": 1,
   "practice_id": "PR03",
   "commit": "aced21b2429fd36cae2e9d98dd05dd73481231bb",
-  "cource_kit": {
+  "course_kit": {
     "version": "v1-w08",
     "archive_sha256": "aea8efd0a51668af63f2e475b82bfa28bd76c21f20d8afea6b136d43a56a88fb"
   },
-  "commads": [
+  "commands": [
     "printenv ROS_DISTRO ROS_DOMAIN_ID",
     "ros2 pkg prefix turtlesim",
     "ros2 pkg create --build-type ament_python --node-name patrol patrol --dependencies rlcpy geometry_msgs --license MIT",
@@ -42,6 +42,10 @@
     "public_tests_passed": true,
     "defect_reproduced": true,
     "defect_fixed": true
+  },
+  "time" : {
+    "contact_academic_hours": 2,
+    "self_study_hours": 2
   },
   "ai_used": true
 }
