@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "practice_id": "PR04",
+  "commit": "fa8d0a70fa400d9f37b9cfd3eab3633bf10d94f6",
+  "cource_kit": {
+    "version": "v1-w08",
+    "archive_sha256": "aea8efd0a51668af63f2e475b82bfa28bd76c21f20d8afea6b136d43a56a88fb"
+  },
+  "commads": [
+    "printenv ROS_DISTRO ROS_DOMAIN_ID",
+    "ros2 pkg prefix turtlesim",
+    "ros2 pkg create --build-type ament_python --node-name patrol patrol --dependencies rlcpy geometry_msgs --license MIT",
+    "ros2 topic echo /turtle1/pose --once",
+    "ros2 run patrol patrol",
+    "ros2 run patrol patrol -r cmd_vel:=/turtle1/cmd_vel",
+    "ros2 topic hz /turtle1/cmd_vel",
+    "ros2 param set /patrol frq_hz 5.0",
+    "ros2 param get /patrol frq_hz",
+    "ros2 service list -t",
+    "ros2 service type /clear",
+    "ros2 service call /clear std_srvs/srv/Empty {}",
+    "ros2 action info /turtle1/rotate_absolute",
+    "ros2 action send_goal /turtle1/rotate_absolute turtlesim_msgs/action/RotateAbsolute '{theta: 1.57}' --feedback"
+     ],
+  "tests": [
+    {
+      "name": "package_launch",
+      "status": "passed"
+    },
+    {
+      "name": "clear_field",
+      "status": "passed"
+    },
+    {
+      "name": "rotate_absolute",
+      "status": "passed"
+    },
+    {
+      "name": "frequency_defect_reproduced",
+      "status": "passed"
+    },
+    {
+      "name": "frequency_defect_fixed",
+      "status": "passed"
+    }
+  ],
+  "defect": {
+    "reproducer": "zero-frequency fall reproduced (zero-division exception)",
+    "root_cause": "1/hz period feiled to calculate",
+    "proof_after": "After adding of the validation logic package refused from apply incorrect frq_hz value"
+  },
+  "claims": {
+    "public_tests_passed": true,
+    "defect_reproduced": true,
+    "defect_fixed": true
+  },
+  "ai_used": true
+}
