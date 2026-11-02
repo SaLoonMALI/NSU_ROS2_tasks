@@ -12,7 +12,7 @@ class PatrolNode(Node):
         super().__init__('patrol')
         self.last_pose: Optional[Pose] = None
         self.declare_parameter('lin_spd', 0.5)
-        self.declare_parameter('ang_spd', 0.5)
+        self.declare_parameter('ang_spd', 0.3)
         self.declare_parameter('frq_hz', 10.0)
 
         self.pose_subscription = self.create_subscription(
@@ -26,7 +26,7 @@ class PatrolNode(Node):
                                     '/cmd_vel',
                                     10
                                 )
-        # self.timer = self.create_timer(0.1, self.timer_callback)
+
         self.timer = None
         self.timer_freq = None
         self.update_timer()
@@ -35,8 +35,11 @@ class PatrolNode(Node):
 
     def update_timer(self):
         freq = self.get_parameter('frq_hz').get_parameter_value().double_value
-        if freq <= 0:
-            return
+        if not 1 <= freq <= 30:
+            print(f"'frq_hz' must be at 1 - 30; got {freq}")
+            return 
+
+        #freq = max(1.0, min(freq, 30))
 
         if freq != self.timer_freq:
             if self.timer is not None:
@@ -55,6 +58,9 @@ class PatrolNode(Node):
 
         lx = self.get_parameter('lin_spd').get_parameter_value().double_value
         lz = self.get_parameter('ang_spd').get_parameter_value().double_value
+
+        lx = max(0.0, min(1.0, lx))
+        lz = max(-1.0, min(1.0, lz))
 
         self.timer_call_count += 1
         twist = self.get_command_from_pose(self.last_pose, lx, lz)
