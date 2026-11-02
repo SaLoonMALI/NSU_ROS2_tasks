@@ -17,4 +17,4 @@ jobs:
           curl -fsSLo course-kit.tar.gz "https://ros.lms.ci.nsu.ru//downloads/robotics-course-kit-v1-w08-aea8efd0a516.tar.gz"
           mkdir -p course_kit/
           tar -xzf course-kit.tar.gz -C course_kit/
-          python3 course_kit/v1/tools/check_practice.py PR03 --submission .
+          python3 course_kit/v1/tools/check_practice.py PR04 --submission .
