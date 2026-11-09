@@ -1,0 +1,15 @@
+/robot_a/sensor_pose:
+  reliability: best_effort
+  history: keep_last
+  depth: 10
+
+
+
+[INFO] [1794168266.018774487] [rosbag2_player]: Set rate to 1
+[INFO] [1794168266.028930425] [rosbag2_player]: Adding keyboard callbacks.
+[INFO] [1794168266.028991986] [rosbag2_player]: Press SPACE for Pause/Resume
+[INFO] [1794168266.029005467] [rosbag2_player]: Press CURSOR_RIGHT for Play Next Message
+[INFO] [1794168266.029016362] [rosbag2_player]: Press CURSOR_UP for Increase Rate 10%
+[INFO] [1794168266.029026115] [rosbag2_player]: Press CURSOR_DOWN for Decrease Rate 10%
+[INFO] [1794168266.030374312] [rosbag2_player]: Playback until timestamp: -1
+
