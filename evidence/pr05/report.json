@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "practice_id": "PR05",
+  "commit": "643927710ab1f1d7edd4ded6d9053158122d2b49",
+  "course_kit": {
+    "version": "v1-w08",
+    "archive_sha256": "aea8efd0a51668af63f2e475b82bfa28bd76c21f20d8afea6b136d43a56a88fb"
+  },
+  "commands": [
+    "colcon build --symlink-install --packages-select course_bringup",
+    "source install/setup.bash",
+    "ros2 launch course_bringup patrol.launch.py   namespace:=robot_a subscriber_reliability:=reliable record:=false",
+    "ros2 launch course_bringup bringup.launch.py namespace:=robot_a subscriber_reliability:=best_effort record:=true bag_dir:=bags",
+    "ros2 bag info bags/sensor_pose_bag",
+    "ros2 run course_bringup pose_subscriber --ros-args -r __ns:=/robot_a -p reliability:=best_effort",
+    "ros2 topic info -v /robot_a/sensor_pose",
+    "timeout 5 ros2 topic echo /robot_a/sensor_pose --qos-reliability reliable --once",
+    "ros2 topic info -v /robot_a/sensor_pose",
+    "ros2 bag play bags/sensor_pose_bag --qos-profile-overrides-path config/qos-overrides.yaml",
+    "ros2 bag info bags/sensor_pose_bag"
+    ],
+  "tests": [
+    {
+      "name": "package_build",
+      "status": "passed"
+    },
+    {
+      "name": "reliable_subscriber_launch",
+      "status": "passed"
+    },
+    {
+      "name": "best_effort_subscriber_launch",
+      "status": "passed"
+    },
+    {
+      "name": "qos-deffect-reproduced",
+      "status": "passed"
+    },
+    {
+      "name": "qos-defect-fixed",
+      "status": "passed"
+    }
+  ],
+  "defect": {
+    "reproducer": "reliable-subscriber -- best-effort sencor defect reproduced",
+    "root_cause": "subscriber -- publisher QoS mismatch",
+    "proof_after": "After best-effort -- best-effort launch connection established succesfully"
+  },
+  "claims": {
+    "public_tests_passed": true,
+    "defect_reproduced": true,
+    "defect_fixed": true,
+    "replay_verified": true
+  },
+  "time": {
+    "contact_academic_hours": 2,
+    "self_study_hours": 2
+  },
+  "ai_used": true
+}
