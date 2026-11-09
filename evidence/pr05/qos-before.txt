@@ -1,0 +1,1 @@
+[WARN] [1794165207.357629735] [_ros2cli_945]: New publisher discovered on topic '/robot_a/sensor_pose', offering incompatible QoS. No messages will be received from it. Last incompatible policy: RELIABILITY
