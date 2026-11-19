@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "practice_id": "PR06",
+  "commit": "cb6245301667ee66385f58713141509f3da4152e",
+  "course_kit": {
+    "version": "v1-w08",
+    "archive_sha256": "aea8efd0a51668af63f2e475b82bfa28bd76c21f20d8afea6b136d43a56a88fb"
+  },
+  "commands": [
+    "ros2 pkg create my_robot_description --build-type ament_cmake --license MIT",
+    "colcon build --symlink-instal",
+    "ros2 launch course_description display.launch.py",
+    "ros2 topic info /tf_static --verbose",
+    "xacro src/course_description/urdf/vehicle.urdf.xacro > /tmp/vehicle.urdf; check_urdf /tmp/vehicle.urdf",
+    "colcon test --packages-select course_description",
+    "ros2 run tf2_tools view_frames",
+    "ros2 topic echo /tf_static --once"
+    ],
+  "tests": [
+    {
+      "name": "package_init_build",
+      "status": "passed"
+    },
+    {
+      "name": "frame_construction",
+      "status": "passed"
+    },
+    {
+      "name": "wrong_lidar_link",
+      "status": "passed"
+    },
+    {
+      "name": "fix_lidar_link",
+      "status": "passed"
+    },
+    {
+      "name": "RViz_demo",
+      "status": "passed"
+    }
+  ],
+  "defect": {
+    "reproducer": "wrong geometric placement when URDF check is ok",
+    "root_cause": "URDF check check structure, not dimentions",
+    "proof_after": "Fix lidar link"
+  },
+  "claims": {
+    "public_tests_passed": true,
+    "defect_reproduced": true,
+    "defect_fixed": true,
+    "replay_verified": true
+  },
+  "time": {
+    "contact_academic_hours": 2,
+    "self_study_hours": 2
+  },
+  "ai_used": true
+}
