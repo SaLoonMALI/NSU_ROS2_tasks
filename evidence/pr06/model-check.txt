@@ -1,0 +1,13 @@
+robot name is: course_ackermann
+---------- Successfully Parsed XML ---------------
+root Link: base_link has 8 child(ren)
+    child(1):  chassis_link
+    child(2):  camera_link
+    child(3):  front_left_knuckle
+        child(1):  front_left_wheel
+    child(4):  front_right_knuckle
+        child(1):  front_right_wheel
+    child(5):  imu_link
+    child(6):  lidar_link
+    child(7):  rear_left_wheel
+    child(8):  rear_right_wheel
