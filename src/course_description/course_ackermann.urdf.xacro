@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+<robot name="course_ackermann" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:arg name="wheelbase"      default="0.80"/>
+  <xacro:arg name="track"          default="0.62"/>
+  <xacro:arg name="wheel_radius"   default="0.12"/>
+  <xacro:arg name="wheel_width"    default="0.07"/>
+  <xacro:arg name="body_length"    default="1.05"/>
+  <xacro:arg name="body_width"     default="0.52"/>
+  <xacro:arg name="body_height"    default="0.22"/>
+  <xacro:arg name="body_center_z"  default="0.24"/>
+  <xacro:arg name="body_mass"      default="12.0"/>
+  <xacro:arg name="body_ixx"       default="0.55"/>
+  <xacro:arg name="body_iyy"       default="1.10"/>
+  <xacro:arg name="body_izz"       default="1.40"/>
+  <xacro:arg name="wheel_mass"     default="0.8"/>
+  <xacro:arg name="knuckle_mass"   default="0.2"/>
+  <xacro:arg name="sensor_mass"    default="0.0333333333"/>
+  <xacro:arg name="lidar_x"        default="0.28"/>
+  <xacro:arg name="lidar_z"        default="0.26"/>
+  <xacro:arg name="steer_limit"    default="0.55"/>
+  <xacro:arg name="steer_effort"   default="25"/>
+
+  <xacro:property name="wheelbase"     value="$(arg wheelbase)"/>
+  <xacro:property name="track"         value="$(arg track)"/>
+  <xacro:property name="wheel_radius"  value="$(arg wheel_radius)"/>
+  <xacro:property name="wheel_width"   value="$(arg wheel_width)"/>
+  <xacro:property name="body_length"   value="$(arg body_length)"/>
+  <xacro:property name="body_width"    value="$(arg body_width)"/>
+  <xacro:property name="body_height"   value="$(arg body_height)"/>
+  <xacro:property name="body_center_z" value="$(arg body_center_z)"/>
+  <xacro:property name="body_mass"     value="$(arg body_mass)"/>
+  <xacro:property name="body_ixx"      value="$(arg body_ixx)"/>
+  <xacro:property name="body_iyy"      value="$(arg body_iyy)"/>
+  <xacro:property name="body_izz"      value="$(arg body_izz)"/>
+  <xacro:property name="wheel_mass"    value="$(arg wheel_mass)"/>
+  <xacro:property name="knuckle_mass"  value="$(arg knuckle_mass)"/>
+  <xacro:property name="sensor_mass"   value="$(arg sensor_mass)"/>
+  <xacro:property name="lidar_x"       value="$(arg lidar_x)"/>
+  <xacro:property name="lidar_z"       value="$(arg lidar_z)"/>
+  <xacro:property name="steer_limit"   value="$(arg steer_limit)"/>
+  <xacro:property name="steer_effort"  value="$(arg steer_effort)"/>
+  
+  <link name="base_link"/>
+
+  <joint name="base_to_chassis" type="fixed">
+    <parent link="base_link"/>
+    <child link="chassis_link"/>
+    <origin xyz="0 0 ${body_center_z}" rpy="0 0 0"/>
+  </joint>
+  <joint name="lidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+    <origin xyz="${lidar_x} 0 ${lidar_z}" rpy="0 0 0"/>
+  </joint>
+ 
+  <link name="lidar_link">
+    <visual>
+      <geometry>
+        <cylinder radius="0.035" length="0.04"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <mass value="${sensor_mass}"/>
+      <inertia ixx="0.000333333333" ixy="0" ixz="0"
+               iyy="0.000333333333" iyz="0"
+               izz="0.000333333333"/>
+    </inertial>
+  </link>
+	  
+  <joint name="camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+    <origin xyz="${lidar_x} 0 ${lidar_z}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="camera_link">
+    <inertial>
+      <mass value="${sensor_mass}"/>
+      <inertia ixx="0.000333333333" ixy="0" ixz="0"
+               iyy="0.000333333333" iyz="0"
+               izz="0.000333333333"/>
+    </inertial>
+  </link>
+
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin xyz="${lidar_x} 0 ${lidar_z}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="imu_link">
+    <inertial>
+      <mass value="${sensor_mass}"/>
+      <inertia ixx="0.000333333334" ixy="0" ixz="0"
+               iyy="0.000333333334" iyz="0"
+               izz="0.000333333334"/>
+    </inertial>
+  </link>
+
+  <link name="chassis_link">
+    <visual>
+      <geometry>
+        <box size="${body_length} ${body_width} ${body_height}"/>
+      </geometry>
+      <material name="body_blue">
+        <color rgba="0.05 0.36 0.72 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="${body_length} ${body_width} ${body_height}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="${body_mass}"/>
+      <inertia ixx="${body_ixx}" ixy="0" ixz="0"
+               iyy="${body_iyy}" iyz="0"
+               izz="${body_izz}"/>
+    </inertial>
+  </link>
+  
+  <xacro:macro name="wheel" params="prefix x y steered">
+    <xacro:if value="${steered}">
+      <link name="${prefix}_knuckle">
+        <inertial>
+          <mass value="${knuckle_mass}"/>
+          <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+        </inertial>
+      </link>
+      <joint name="${prefix}_steering_joint" type="revolute">
+        <parent link="base_link"/>
+        <child link="${prefix}_knuckle"/>
+        <origin xyz="${x} ${y} ${wheel_radius}" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-${steer_limit}" upper="${steer_limit}"
+               effort="${steer_effort}" velocity="3.0"/>
+      </joint>
+    </xacro:if>
+
+    <link name="${prefix}_wheel">
+      <visual>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
+        <material name="wheel_black">
+          <color rgba="0.04 0.04 0.04 1.0"/>
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${wheel_mass}"/>
+        <!-- Цилиндр r=0.12, L=0.07, m=0.8: спин по y = m*r^2/2, поперечные = m*(3r^2+L^2)/12 -->
+        <inertia ixx="0.00321" ixy="0" ixz="0"
+                 iyy="0.00576" iyz="0"
+                 izz="0.00321"/>
+      </inertial>
+    </link>
+
+    <xacro:if value="${steered}">
+      <joint name="${prefix}_wheel_joint" type="continuous">
+        <parent link="${prefix}_knuckle"/>
+        <child link="${prefix}_wheel"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+      </joint>
+    </xacro:if>
+    <xacro:unless value="${steered}">
+      <joint name="${prefix}_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="${prefix}_wheel"/>
+        <origin xyz="${x} ${y} ${wheel_radius}" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+      </joint>
+    </xacro:unless>
+  </xacro:macro>
+
+  <xacro:wheel prefix="front_left"  x="${wheelbase/2}"  y="${track/2}"  steered="true"/>
+  <xacro:wheel prefix="front_right" x="${wheelbase/2}"  y="${-track/2}" steered="true"/>
+  <xacro:wheel prefix="rear_left"   x="${-wheelbase/2}" y="${track/2}"  steered="false"/>
+  <xacro:wheel prefix="rear_right"  x="${-wheelbase/2}" y="${-track/2}" steered="false"/>
+
+</robot>
